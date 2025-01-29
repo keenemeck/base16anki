@@ -1,8 +1,32 @@
-addons_path = "/Users/keene/Library/Application Support/Anki2/addons21/"
+import colorsys
+
+def hex_to_hsl(hex_color):
+
+    hex_color = hex_color.lstrip('#')
+
+    r = int(hex_color[0:2], 16) / 255
+    g = int(hex_color[2:4], 16) / 255
+    b = int(hex_color[4:6], 16) / 255
+
+    h, l, s = colorsys.rgb_to_hls(r, g, b)
+
+    return round(h * 360), round(100 * s) / 100, round(100 * l) / 100
+
+def hls_to_hex(h, l, s):
+    h = h / 360
+
+    r, g, b = colorsys.hls_to_rgb(h, l, s)
+
+    return "#{:02x}{:02x}{:02x}".format(int(r * 255), int(g * 255), int(b * 255))
+
+addons_path = "/mnt/c/Users/keene/AppData/Roaming/Anki2/addons21/"
 
 theme = input("Enter theme name: ")
-if theme == "":
-    theme = "gruvbox-material-dark-medium"
+arg = ""
+
+if len(theme.split()) > 1:
+    arg = theme.split()[1]
+    theme = theme.split()[0]
 
 with open("schemes/" + theme + ".yaml", "r") as file:
     lines = file.readlines()
@@ -23,6 +47,22 @@ base0C = str(lines[17][11:18])
 base0D = str(lines[18][11:18])
 base0E = str(lines[19][11:18])
 base0F = str(lines[20][11:18])
+
+new_color = base0D
+
+
+if arg == "-r":
+    new_color = base08
+elif arg == "-o":
+    new_color = base09
+elif arg == "-g":
+    new_color = base0B
+elif arg == "-b":
+    new_color = base0D
+elif arg == "-p":
+    new_color = base0E
+elif arg == "-br":
+    new_color = base0F
 
 with open("theme.json", "r") as file:
     lines = file.readlines()
@@ -75,6 +115,7 @@ replacements = {
     "STATE_SUSPENDED": base06,
 }
 
+
 # Iterate through lines and replace accordingly
 for i, line in enumerate(lines):
     for key, value in replacements.items():
@@ -85,6 +126,8 @@ for i, line in enumerate(lines):
 with open(addons_path + "688199788/themes/" + theme.replace("-", " ").title() + ".json", "w") as file:
     file.writelines(lines)
 
+
+# Configure button colors
 with open(addons_path + "2494384865/config.json", "r") as file:
     lines = file.readlines()
 
@@ -93,4 +136,56 @@ lines[8] = f'    "3 answers": ["{base08}", "{base0B}", "{base0D}"],\n'
 lines[9] = f'    "4 answers": ["{base08}", "{base0A}", "{base0B}", "{base0D}"]\n'
 
 with open(addons_path + "2494384865/config.json", "w") as file:
+    file.writelines(lines)
+
+
+# Configure study time stats
+with open(addons_path + "1247171202/meta.json", "r") as file:
+    lines = file.readlines()
+
+first_occurence = lines[0].find("titleColor") + 14
+lines[0] = lines[0][:first_occurence] + base07 + lines[0][first_occurence + 7:]
+
+second_occurence = lines[0].find("titleColor", first_occurence + 7) + 14
+lines[0] = lines[0][:second_occurence] + base07 + lines[0][second_occurence + 7:]
+
+first_occurence = lines[0].find("outputColor") + 15
+lines[0] = lines[0][:first_occurence] + new_color + lines[0][first_occurence + 7:]
+
+second_occurence = lines[0].find("outputColor", first_occurence + 7) + 15
+lines[0] = lines[0][:second_occurence] + new_color + lines[0][second_occurence + 7:]
+
+with open(addons_path + "1247171202/meta.json", "w") as file:
+    file.writelines(lines)
+
+
+# Configure heatmap
+with open(addons_path + "1771074083/web/anki-review-heatmap.js", "r") as file:
+    lines = file.readlines()
+
+first_occurence = lines[1].find("q11") + 10
+
+q11 = lines[1][first_occurence:first_occurence + 7]
+q11_hsl = hex_to_hsl(q11)
+
+new_color_hsl = hex_to_hsl(new_color)
+
+for i in range(10):
+    first_occurence = lines[1].find("q" + str(i + 11)) + 10
+    color_i = hls_to_hex(new_color_hsl[0], round(100 * min(1, (0.2 + new_color_hsl[2] - 0.50 * i / 9))) / 100, new_color_hsl[1])
+    lines[1] = lines[1][:first_occurence] + color_i + lines[1][first_occurence + 7:]
+
+    second_occurence = lines[1].find("q" + str(i + 11), first_occurence) + 10
+    color_i = hls_to_hex(new_color_hsl[0], round(100 * min(1, (0.2 + new_color_hsl[2] - 0.50 * (9 - i) / 9))) / 100, new_color_hsl[1])
+    lines[1] = lines[1][:second_occurence] + color_i + lines[1][second_occurence + 7:]
+
+    first_occurence = lines[1].find("col" + str(i + 11)) + 13
+    color_i = hls_to_hex(new_color_hsl[0], round(100 * min(1, (0.2 + new_color_hsl[2] - 0.50 * i / 9))) / 100, new_color_hsl[1])
+    lines[1] = lines[1][:first_occurence] + color_i + lines[1][first_occurence + 7:]
+
+    second_occurence = lines[1].find("col" + str(i + 11), first_occurence) + 13
+    color_i = hls_to_hex(new_color_hsl[0], round(100 * min(1, (0.2 + new_color_hsl[2] - 0.50 * (9 - i) / 9))) / 100, new_color_hsl[1])
+    lines[1] = lines[1][:second_occurence] + color_i + lines[1][second_occurence + 7:]
+
+with open(addons_path + "1771074083/web/anki-review-heatmap.js", "w") as file:
     file.writelines(lines)
