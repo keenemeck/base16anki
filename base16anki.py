@@ -4,7 +4,7 @@ theme = input("Enter theme name: ")
 if theme == "":
     theme = "gruvbox-material-dark-medium"
 
-with open("base16-schemes/" + theme + ".yaml", "r") as file:
+with open("newschemes/" + theme + ".yaml", "r") as file:
     lines = file.readlines()
 
 base00 = str(lines[2][9:15])
