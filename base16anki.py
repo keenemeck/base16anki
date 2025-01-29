@@ -1,28 +1,28 @@
-addons_path = "/mnt/c/Users/keene/AppData/Roaming/Anki2/addons21/"
+addons_path = "/Users/keene/Library/Application Support/Anki2/addons21/"
 
 theme = input("Enter theme name: ")
 if theme == "":
     theme = "gruvbox-material-dark-medium"
 
-with open("newschemes/" + theme + ".yaml", "r") as file:
+with open("schemes/" + theme + ".yaml", "r") as file:
     lines = file.readlines()
 
-base00 = str(lines[2][9:15])
-base01 = str(lines[3][9:15])
-base02 = str(lines[4][9:15])
-base03 = str(lines[5][9:15])
-base04 = str(lines[6][9:15])
-base05 = str(lines[7][9:15])
-base06 = str(lines[8][9:15])
-base07 = str(lines[9][9:15])
-base08 = str(lines[10][9:15])
-base09 = str(lines[11][9:15])
-base0A = str(lines[12][9:15])
-base0B = str(lines[13][9:15])
-base0C = str(lines[14][9:15])
-base0D = str(lines[15][9:15])
-base0E = str(lines[16][9:15])
-base0F = str(lines[17][9:15])
+base00 = str(lines[5][11:18])
+base01 = str(lines[6][11:18])
+base02 = str(lines[7][11:18])
+base03 = str(lines[8][11:18])
+base04 = str(lines[9][11:18])
+base05 = str(lines[10][11:18])
+base06 = str(lines[11][11:18])
+base07 = str(lines[12][11:18])
+base08 = str(lines[13][11:18])
+base09 = str(lines[14][11:18])
+base0A = str(lines[15][11:18])
+base0B = str(lines[16][11:18])
+base0C = str(lines[17][11:18])
+base0D = str(lines[18][11:18])
+base0E = str(lines[19][11:18])
+base0F = str(lines[20][11:18])
 
 with open("theme.json", "r") as file:
     lines = file.readlines()
@@ -79,18 +79,18 @@ replacements = {
 for i, line in enumerate(lines):
     for key, value in replacements.items():
         if key in line:
-            lines[i + 2] = f'            "#{value}",\n'
-            lines[i + 3] = f'            "#{value}",\n'
+            lines[i + 2] = f'            "{value}",\n'
+            lines[i + 3] = f'            "{value}",\n'
 
 with open(addons_path + "688199788/themes/" + theme.replace("-", " ").title() + ".json", "w") as file:
     file.writelines(lines)
 
-with open(addons_path + "494384865/config.json", "r") as file:
+with open(addons_path + "2494384865/config.json", "r") as file:
     lines = file.readlines()
 
-lines[7] = f'    "2 answers": ["#{base09}", "#{base0B}"],\n'
-lines[8] = f'    "3 answers": ["#{base09}", "#{base0B}", "#{base0D}"],\n'
-lines[9] = f'    "4 answers": ["#{base09}", "#{base0A}", "#{base0B}", "#{base0D}"]\n'
+lines[7] = f'    "2 answers": ["{base08}", "{base0B}"],\n'
+lines[8] = f'    "3 answers": ["{base08}", "{base0B}", "{base0D}"],\n'
+lines[9] = f'    "4 answers": ["{base08}", "{base0A}", "{base0B}", "{base0D}"]\n'
 
 with open(addons_path + "2494384865/config.json", "w") as file:
     file.writelines(lines)
