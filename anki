@@ -3,6 +3,11 @@
 import colorsys
 import os
 import sys
+from aqt import colors
+from aqt.qt import *
+from aqt.utils import openLink, tooltip
+from aqt.theme import theme_manager
+from .ankiaddonconfig import ConfigManager, ConfigWindow, ConfigLayout
 
 def hex_to_hsl(hex_color):
 
@@ -89,7 +94,10 @@ replacements = {
     "BUTTON_DISABLED": base02,
     "\"BUTTON_HOVER\"": base03,
     "BUTTON_HOVER_BORDER": base04,
-    "BUTTON_PRIMARY": base0D,
+    "BUTTON_PRIMARY_BG": base0D,
+    "BUTTON_PRIMARY_DISABLED": base0D,
+    "BUTTON_PRIMARY_GRADIENT_END": base0D,
+    "BUTTON_PRIMARY_GRADIENT_START": base0D,
     "\"CANVAS\"": base00,
     "CANVAS_CODE": base01,
     "CANVAS_ELEVATED": base01,
@@ -125,7 +133,6 @@ replacements = {
     "STATE_SUSPENDED": base06,
 }
 
-
 # Iterate through lines and replace accordingly
 for i, line in enumerate(lines):
     for key, value in replacements.items():
@@ -136,6 +143,19 @@ for i, line in enumerate(lines):
 with open(addons_path + "688199788/themes/" + theme.replace("-", " ").title() + ".json", "w") as file:
     file.writelines(lines)
 
+# Load theme in ReColor
+theme_path = f"{addons_path}688199788/meta.json"
+with open(theme_path, "r") as file:
+    lines = file.readlines()
+
+for key in replacements:
+    idx = lines[0].find(key)
+    first_comma = lines[0].find(",", idx)
+    lines[0] = lines[0][:first_comma + 3] + replacements[key] + '", "' + replacements[key] + lines[0][first_comma + 7 + len(replacements[key]) * 2:]
+
+
+with open(theme_path, "w") as file:
+    file.writelines(lines)
 
 # Configure button colors
 with open(addons_path + "2494384865/config.json", "r") as file:
@@ -199,3 +219,8 @@ for i in range(10):
 
 with open(addons_path + "1771074083/web/anki-review-heatmap.js", "w") as file:
     file.writelines(lines)
+
+
+# Reload theme
+conf = ConfigManager()
+conf_window.update_widgets()
