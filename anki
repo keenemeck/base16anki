@@ -3,11 +3,6 @@
 import colorsys
 import os
 import sys
-from aqt import colors
-from aqt.qt import *
-from aqt.utils import openLink, tooltip
-from aqt.theme import theme_manager
-from .ankiaddonconfig import ConfigManager, ConfigWindow, ConfigLayout
 
 def hex_to_hsl(hex_color):
 
@@ -219,8 +214,3 @@ for i in range(10):
 
 with open(addons_path + "1771074083/web/anki-review-heatmap.js", "w") as file:
     file.writelines(lines)
-
-
-# Reload theme
-conf = ConfigManager()
-conf_window.update_widgets()
