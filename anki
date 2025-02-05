@@ -23,7 +23,7 @@ def hls_to_hex(h, l, s):
 
     return "#{:02x}{:02x}{:02x}".format(int(r * 255), int(g * 255), int(b * 255))
 
-addons_path = "/mnt/c/Users/keene/AppData/Roaming/Anki2/addons21/"
+addons_path = "/Users/keene/Library/Application Support/Anki2/addons21/"
 
 theme, arg = "", ""
 
@@ -38,7 +38,7 @@ else:
     if len(sys.argv) == 3:
         arg = sys.argv[2]
 
-with open(os.path.expanduser("~/base16/schemes/" + theme + ".yaml"), "r") as file:
+with open(os.path.expanduser("~/base16anki/schemes/" + theme + ".yaml"), "r") as file:
     lines = file.readlines()
 
 base00 = str(lines[5][11:18])
@@ -74,7 +74,7 @@ elif arg == "-p":
 elif arg == "-br":
     new_color = base0F
 
-with open(os.path.expanduser("~/base16/theme.json"), "r") as file:
+with open(os.path.expanduser("~/base16anki/theme.json"), "r") as file:
     lines = file.readlines()
 
 replacements = {
@@ -98,6 +98,7 @@ replacements = {
     "CANVAS_ELEVATED": base01,
     "CANVAS_GLASS": base01 + "66",
     "CANVAS_OVERLAY": base01,
+    "CANVAS_INSET": base00,
     "\"FG\"": base07,
     "FG_DISABLED": base06,
     "FG_FAINT": base05,
@@ -119,6 +120,7 @@ replacements = {
     "SELECTED_FG": base07,
     "SHADOW": base00,
     "SHADOW_FOCUS": base09,
+    "SHADOW_INSET": base00,
     "SHADOW_SUBTLE": base01,
     "STATE_BURIED": base02,
     "STATE_LEARN": base08,
